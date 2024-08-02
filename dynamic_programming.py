@@ -130,7 +130,7 @@ class Solution:
 
         return dp[0][1]
 
-    def coinChange(self, coins: list[int], amount: int) -> int:
+    def coinChange(self, coins: List[int], amount: int) -> int:
         dp = [amount + 1] * (amount + 1)
         dp[0] = 0
 
@@ -140,7 +140,7 @@ class Solution:
                     dp[i] = min(dp[i], 1 + dp[i - c])
         return dp[-1] if dp[-1] != amount + 1 else -1
 
-    def wordBreak(self, s: str, wordDict: list[str]) -> bool:
+    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
         dp = [False] * len(s)
         for i in range(len(s)):
             for word in wordDict:
@@ -150,7 +150,7 @@ class Solution:
                         break
         return dp[-1]
 
-    def lengthOfLIS(self, nums: list[int]) -> int:
+    def lengthOfLIS(self, nums: List[int]) -> int:
         n = len(nums)
         dp = [1] * n
 
@@ -168,7 +168,7 @@ class Solution:
         print(dp)
         return dp[0]
 
-    def maxProfit_1(self, k: int, prices: list[int]) -> int:
+    def maxProfit_1(self, k: int, prices: List[int]) -> int:
         @lru_cache(None)
         def dp(i, transaction_remaining, holding):
             if transaction_remaining == 0 or i == len(prices):
@@ -191,7 +191,7 @@ class Solution:
 
         return dp(0, k, 0)
 
-    def maxProfit_2(self, prices: list[int]) -> int:
+    def maxProfit_2(self, prices: List[int]) -> int:
         @lru_cache(None)
         def dp(i: int, h: bool, cd: bool) -> int:
             if i == len(prices):
