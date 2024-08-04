@@ -130,7 +130,7 @@ class Solution:
 
         return dp[0][1]
 
-    def coinChange(self, coins: List[int], amount: int) -> int:
+    def coinChange(self, coins: list[int], amount: int) -> int:
         dp = [amount + 1] * (amount + 1)
         dp[0] = 0
 
@@ -140,7 +140,7 @@ class Solution:
                     dp[i] = min(dp[i], 1 + dp[i - c])
         return dp[-1] if dp[-1] != amount + 1 else -1
 
-    def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+    def wordBreak(self, s: str, wordDict: list[str]) -> bool:
         dp = [False] * len(s)
         for i in range(len(s)):
             for word in wordDict:
@@ -150,7 +150,7 @@ class Solution:
                         break
         return dp[-1]
 
-    def lengthOfLIS(self, nums: List[int]) -> int:
+    def lengthOfLIS(self, nums: list[int]) -> int:
         n = len(nums)
         dp = [1] * n
 
@@ -168,7 +168,7 @@ class Solution:
         print(dp)
         return dp[0]
 
-    def maxProfit_1(self, k: int, prices: List[int]) -> int:
+    def maxProfit_1(self, k: int, prices: list[int]) -> int:
         @lru_cache(None)
         def dp(i, transaction_remaining, holding):
             if transaction_remaining == 0 or i == len(prices):
@@ -191,7 +191,7 @@ class Solution:
 
         return dp(0, k, 0)
 
-    def maxProfit_2(self, prices: List[int]) -> int:
+    def maxProfit_2(self, prices: list[int]) -> int:
         @lru_cache(None)
         def dp(i: int, h: bool, cd: bool) -> int:
             if i == len(prices):
@@ -210,6 +210,104 @@ class Solution:
             return max(action, no_action)
 
         return dp(0, 0, 0)
+
+    def minCostClimbingStairs(self, cost: list[int]) -> int:
+        if len(cost) == 1:
+            return cost[0]
+
+        if len(cost) == 2:
+            return min(cost[0], cost[1])
+
+        dp = [0] * (len(cost) + 1)
+
+        for i in range(len(cost) - 1, -1, -1):
+            if i == len(cost) - 1:
+                dp[i] = cost[i]
+            else:
+                dp[i] = cost[i] + min(dp[i + 1], dp[i + 2])
+
+        return min(dp[0], dp[1])
+
+    def numWays(self, n: int, k: int) -> int:
+        dp = [0, k, k**2]
+        for _ in range(n - 2):
+            dp.append(sum(dp[-2:]) * (k - 1))
+
+        return dp[n]
+
+    def change(self, amount: int, coins: list[int]) -> int:
+        n = len(coins)
+        dp = [[0] * (amount + 1) for _ in range(n + 1)]
+
+        for i in range(n):
+            dp[i][0] = 1
+
+        for i in range(n - 1, -1, -1):
+            for j in range(1, amount + 1):
+                if coins[i] > j:
+                    dp[i][j] = dp[i + 1][j]
+                else:
+                    dp[i][j] = dp[i + 1][j] + dp[i][j - coins[i]]
+
+        print(dp)
+        return dp[0][amount]
+
+    @lru_cache(None)
+    def recursiveWithMemo(self, index, s) -> int:
+        # If you reach the end of the string
+        # Return 1 for success.
+        if index == len(s):
+            return 1
+
+        # If the string starts with a zero, it can't be decoded
+        if s[index] == "0":
+            return 0
+
+        if index == len(s) - 1:
+            return 1
+
+        answer = self.recursiveWithMemo(index + 1, s)
+        if int(s[index : index + 2]) <= 26:
+            answer += self.recursiveWithMemo(index + 2, s)
+
+        return answer
+
+    def numDecodings(self, s: str) -> int:
+        return self.recursiveWithMemo(0, s)
+
+    def maxProfit_3(self, prices: list[int]) -> int:
+        buy_price = prices[0]
+        profit = 0
+
+        for p in prices[1:]:
+            if buy_price > p:
+                buy_price = p
+
+            profit = max(profit, p - buy_price)
+
+        return profit
+
+    def maxSubarraySumCircular(self, nums: list[int]) -> int:
+        curr = float("inf")
+        mins = float("inf")
+        curr1 = float("-inf")
+        maxs1 = float("-inf")
+        total = 0
+        for i in nums:
+            curr1 = max(curr1 + i, i)
+            maxs1 = max(
+                maxs1, curr1
+            )  # check whether cur max is bigger or prev max is bigger
+        for i in nums:
+            total += i
+            curr = min(curr + i, i)
+            mins = min(mins, curr)
+        if mins == total:
+            return maxs1
+        return max(maxs1, total - mins)
+
+
+# subtracting the minimum subarray sum from the total sum gives the maximum sum of the subarray.
 
 
 if __name__ == "__main__":
