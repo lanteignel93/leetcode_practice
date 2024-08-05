@@ -2,10 +2,10 @@ from functools import lru_cache
 
 
 #   Author: Laurent Lanteigne
-#   Date: 2024-08-01
+#   Date: 2024-08-05
 #   source: https://leetcode.com/explore/learn/card/dynamic-programming/
 #
-class Solution:
+class DynamicProgramming:
     # top_bottom
     def maximumScore(self, nums: list[int], multipliers: list[int]) -> int:
         n, m = len(nums), len(multipliers)
@@ -314,6 +314,6 @@ if __name__ == "__main__":
     nums = [-5, -3, -3, -2, 7, 1]
     multipliers = [-10, -5, 3, 4, 6]
 
-    solution = Solution()
+    solution = DynamicProgramming()
     print(solution.maximumScore(nums=nums, multipliers=multipliers))
     print(solution.maximumScore_(nums=nums, multipliers=multipliers))
