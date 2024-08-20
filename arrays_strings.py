@@ -146,7 +146,7 @@ class ArraysStrings:
         prefix = [nums[0]]
 
         for i in range(1, len(nums)):
-            prefix.append(nums[i] + prefix[-1])
+            prefix.append(nums[i] + prefix[-1]
 
         for i in range(k, len(nums) - k):
             res.append((prefix[i + k] - prefix[i - k] + nums[i - k]) // (2 * k + 1))
