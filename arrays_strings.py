@@ -1,6 +1,3 @@
-from functools import lru_cache
-
-
 #   Author: Laurent Lanteigne
 #   Date: 2024-08-12
 #   source: https://leetcode.com/explore/interview/card/leetcodes-interview-crash-course-data-structures-and-algorithms/703/arraystrings/
@@ -146,7 +143,7 @@ class ArraysStrings:
         prefix = [nums[0]]
 
         for i in range(1, len(nums)):
-            prefix.append(nums[i] + prefix[-1]
+            prefix.append(nums[i] + prefix[-1])
 
         for i in range(k, len(nums) - k):
             res.append((prefix[i + k] - prefix[i - k] + nums[i - k]) // (2 * k + 1))
