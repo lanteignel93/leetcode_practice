@@ -28,7 +28,7 @@ class DynamicProgramming:
     # bottom_up
     def maximumScore_(self, nums: list[int], multipliers: list[int]) -> int:
         n, m = len(nums), len(multipliers)
-        dp = [[0] * (m + 1) for _ in range(m + 1)]
+        dp = [[0] * (m + 1) for _ in range(n + 1)]
 
         for i in range(m - 1, -1, -1):
             for left in range(i, -1, -1):
@@ -228,6 +228,20 @@ class DynamicProgramming:
 
         return min(dp[0], dp[1])
 
+    def climbStairs(self, n: int) -> int:
+        if n <= 2:
+            return n
+
+        dp = [0] * n
+
+        dp[0] = 1
+        dp[1] = 2
+
+        for i in range(2, n):
+            dp[i] = dp[i - 1] + dp[i - 2]
+
+        return dp[n - 1]
+
     def numWays(self, n: int, k: int) -> int:
         dp = [0, k, k**2]
         for _ in range(n - 2):
@@ -306,8 +320,101 @@ class DynamicProgramming:
             return maxs1
         return max(maxs1, total - mins)
 
+    def rob(self, nums: list[int]) -> int:
+        if len(nums) == 1:
+            return nums[0]
 
-# subtracting the minimum subarray sum from the total sum gives the maximum sum of the subarray.
+        n = len(nums)
+        dp = [0] * n
+
+        # Base vases
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+
+        for i in range(2, n):
+            dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
+
+        return dp[n - 1]
+
+    def mostPoints(self, questions: list[list[int]]) -> int:
+        n = len(questions)
+        if n == 1:
+            return questions[0][0]
+
+        dp = [0] * (n + 1)
+
+        for i in range(n - 1, -1, -1):
+            j = i + questions[i][1] + 1
+            dp[i] = max(questions[i][0] + dp[min(j, n)], dp[i + 1])
+
+        return dp[0]
+
+    def minFallingPathSum(self, matrix: list[list[int]]) -> int:
+        n = len(matrix)
+
+        if n == 1:
+            return matrix[0][0]
+
+        def valid(row: int, col: int) -> bool:
+            return 0 <= row < n and 0 <= col < n
+
+        directions = [(-1, -1), (0, -1), (1, -1)]
+        dp = [[0] * n for _ in range(n)]
+
+        def find_min_available_node(row: int, col: int) -> int:
+            curr_min = float("inf")
+            for dx, dy in directions:
+                next_row, next_col = row + dy, col + dx
+                if valid(next_row, next_col):
+                    curr_min = min(curr_min, dp[next_row][next_col])
+
+            return curr_min
+
+        for j in range(0, n):
+            dp[0][j] = matrix[0][j]
+
+        for i in range(1, n):
+            for j in range(n):
+                dp[i][j] = matrix[i][j] + find_min_available_node(i, j)
+
+        return min(dp[n - 1])
+
+    def uniquePathsWithObstacles(self, obstacleGrid: list[list[int]]) -> int:
+        m = len(obstacleGrid)
+        n = len(obstacleGrid[0])
+
+        # If the starting cell has an obstacle, then simply return as there would be
+        # no paths to the destination.
+        if obstacleGrid[0][0] == 1:
+            return 0
+
+        # Number of ways of reaching the starting cell = 1.
+        obstacleGrid[0][0] = 1
+
+        # Filling the values for the first column
+        for i in range(1, m):
+            obstacleGrid[i][0] = int(
+                obstacleGrid[i][0] == 0 and obstacleGrid[i - 1][0] == 1
+            )
+
+        # Filling the values for the first row
+        for j in range(1, n):
+            obstacleGrid[0][j] = int(
+                obstacleGrid[0][j] == 0 and obstacleGrid[0][j - 1] == 1
+            )
+
+        # Starting from cell(1,1) fill up the values
+        # No. of ways of reaching cell[i][j] = cell[i - 1][j] + cell[i][j - 1]
+        # i.e. From above and left.
+        for i in range(1, m):
+            for j in range(1, n):
+                if obstacleGrid[i][j] == 0:
+                    obstacleGrid[i][j] = obstacleGrid[i - 1][j] + obstacleGrid[i][j - 1]
+                else:
+                    obstacleGrid[i][j] = 0
+
+        # Return value stored in rightmost bottommost cell. That is the destination.
+        return obstacleGrid[m - 1][n - 1]
 
 
 if __name__ == "__main__":
