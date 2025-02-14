@@ -1,4 +1,5 @@
 from collections import defaultdict, deque
+import collections
 
 #   Author: Laurent Lanteigne
 #   Date: 2024-10-04
